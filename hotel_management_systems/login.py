@@ -6,11 +6,35 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 
 router=APIRouter(
-    prefix="/login",
     tags=["User_Login"]
 )
+#register  a new custmer with hash password in database
+@router.post("/register",status_code=status.HTTP_201_CREATED)
+def register_user(user:schema.Create_User,db:Session=Depends(database.get_db)):
+    existing = db.query(models.Customers).filter(
+        (models.Customers.username == user.username)|
+        (models.Customers.email == user.email)).first()
+    if existing :
+        raise HTTPException(
+            status_code=status.HTTP_200_OK,
+            detail="Username already Existing."
+        )
+    hash_pwd =hash.hash_pwd(user.password)
+    add = models.Customers(
+        username=user.username,
+        email=user.email,
+        password=hash_pwd,
+        phone=user.phone
+        )
+    db.add(add)
+    db.commit()
+    db.refresh(add)
+    return add
+
+
+
 # Login /authentication
-@router.post("/",status_code=status.HTTP_200_OK)
+@router.post("/login",status_code=status.HTTP_200_OK)
 def login(creds:OAuth2PasswordRequestForm=Depends(),
           db:Session=Depends(database.get_db)):
        user = db.query(models.Customers).filter(models.Customers.username == creds.username).first()
