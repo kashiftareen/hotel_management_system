@@ -42,3 +42,9 @@ class update_booking(BaseModel):
     check_in:date
     check_out:date
     status:Optional[str]="pending"
+
+#create_payment schmea
+class create_payment(BaseModel):
+    booking_id:int
+    amount:float
+    method:str
