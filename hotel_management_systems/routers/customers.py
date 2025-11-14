@@ -7,36 +7,6 @@ router=APIRouter(
     tags=["Customers"]
 )
 
-# register  a new custmer with hash password in database
-@router.post("/",status_code=status.HTTP_201_CREATED)
-def create_user(user:schema.Create_User,db:Session=Depends(database.get_db),
-                current_user:models.Customers=Depends(basic_auth.get_current_user)):
-    existing = db.query(models.Customers).filter(
-        (models.Customers.username == user.username)|
-        (models.Customers.email == user.email)).first()
-    if existing :
-        raise HTTPException(
-            status_code=status.HTTP_200_OK,
-            detail="Username already Existing."
-        )
-    hash_pwd =hash.hash_pwd(user.password)
-    add = models.Customers(
-        username=user.username,
-        email=user.email,
-        password=hash_pwd,
-        phone=user.phone
-        )
-    db.add(add)
-    db.commit()
-    db.refresh(add)
-    return add,{
-           "current_user": {
-            "id": current_user.id,
-            "username": current_user.username,
-            "email": current_user.email,
-            "phone": current_user.phone
-        }}
-
 #to get list of customers from database
 @router.get("/",status_code=status.HTTP_200_OK)
 def get_list_cus(db:Session=Depends(database.get_db),
