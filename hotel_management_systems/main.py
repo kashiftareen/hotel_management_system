@@ -1,7 +1,7 @@
 from fastapi import FastAPI 
 import uvicorn
 from . import login
-from .routers import customers,rooms,bookings
+from .routers import customers,rooms,bookings,payments
 
 
 
@@ -16,6 +16,7 @@ app.include_router(login.router)
 app.include_router(customers.router)
 app.include_router(rooms.router)
 app.include_router(bookings.router)
+app.include_router(payments.router)
 
 
 

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import Depends,APIRouter,HTTPException,status,Response
-from .. import database,models,schema
+from .. import database,models,schema,basic_auth
 
 router=APIRouter(
     prefix="/bookings",
@@ -9,7 +9,9 @@ router=APIRouter(
 
 # Create BOOKING of a room 
 @router.post("/",status_code=status.HTTP_200_OK)
-def create_booking(booking:schema.create_booking,db:Session=Depends(database.get_db)):
+def create_booking(booking:schema.create_booking,
+                   db:Session=Depends(database.get_db),
+                   current_user:models.Customers=Depends(basic_auth.get_current_user)):
     create = models.Bookings(**booking.dict())
     db.add(create)
     db.commit()
@@ -18,7 +20,8 @@ def create_booking(booking:schema.create_booking,db:Session=Depends(database.get
 
 #get list of bookings 
 @router.get("/",status_code=status.HTTP_200_OK)
-def get_bookings_list(db:Session=Depends(database.get_db)):
+def get_bookings_list(db:Session=Depends(database.get_db),
+                      current_user:models.Customers=Depends(basic_auth.get_current_user)):
     get = db.query(models.Bookings).all()
     if get is None:
         raise HTTPException(
@@ -28,7 +31,8 @@ def get_bookings_list(db:Session=Depends(database.get_db)):
 
 # Get one Booking
 @router.get("/{id}",status_code=status.HTTP_200_OK)
-def get_singel_booking(id:int,db:Session=Depends(database.get_db)):
+def get_singel_booking(id:int,db:Session=Depends(database.get_db),
+                       current_user:models.Customers=Depends(basic_auth.get_current_user)):
     get = db.query(models.Bookings).filter(models.Bookings.id == id).first()
     if get is None:
         raise HTTPException(
@@ -39,7 +43,10 @@ def get_singel_booking(id:int,db:Session=Depends(database.get_db)):
 
 # Update Booking
 @router.put("/{id}",status_code=status.HTTP_200_OK)
-def update_booking(id:int,update_bkg:schema.update_booking,db:Session=Depends(database.get_db)):
+def update_booking(id:int,
+                   update_bkg:schema.update_booking,
+                   db:Session=Depends(database.get_db),
+                   current_user:models.Customers=Depends(basic_auth.get_current_user)):
     update = db.query(models.Bookings).filter(models.Bookings.id == id).first()
     if update is None:
         raise HTTPException(
@@ -53,7 +60,8 @@ def update_booking(id:int,update_bkg:schema.update_booking,db:Session=Depends(da
 
 #Delete or cancel booking
 @router.delete("/{id}",status_code=status.HTTP_204_NO_CONTENT)
-def delete_booking(id:int,db:Session=Depends(database.get_db)):
+def delete_booking(id:int,db:Session=Depends(database.get_db),
+                   current_user:models.Customers=Depends(basic_auth.get_current_user)):
     del_bkg = db.query(models.Bookings).filter(models.Bookings.id == id).first()
     if del_bkg is None:
         raise HTTPException(
