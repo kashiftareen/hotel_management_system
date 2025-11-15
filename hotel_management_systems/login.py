@@ -9,7 +9,7 @@ router=APIRouter(
     tags=["User_Login"]
 )
 #register  a new custmer with hash password in database
-@router.post("/register",status_code=status.HTTP_201_CREATED)
+@router.post("/register",status_code=status.HTTP_201_CREATED,response_model=schema.new_user)
 def register_user(user:schema.Create_User,db:Session=Depends(database.get_db)):
     existing = db.query(models.Customers).filter(
         (models.Customers.username == user.username)|

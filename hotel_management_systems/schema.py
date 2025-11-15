@@ -15,8 +15,10 @@ class Create_User(BaseModel):
     password:str
     phone:str
 # Schema for updating customer details
-class update_cust(Create_User):
-    pass
+class update_cust(BaseModel):
+    username:str
+    email:str
+    phone:str
 
 # To create Room Schema
 class create_room(BaseModel):
@@ -58,3 +60,7 @@ class show_customers(BaseModel):
 
     class Config:
         orm_mode = True
+
+# to register new user schema
+class new_user(show_customers):
+    pass
