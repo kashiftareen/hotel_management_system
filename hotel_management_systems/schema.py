@@ -48,3 +48,13 @@ class create_payment(BaseModel):
     booking_id:int
     amount:float
     method:str
+
+# Schema shows customers
+class show_customers(BaseModel):
+    id:int
+    username:str
+    email:str
+    phone:str
+
+    class Config:
+        orm_mode = True
