@@ -58,3 +58,7 @@ class show_customers(BaseModel):
 
     class Config:
         orm_mode = True
+
+# to register new user schema
+class new_user(show_customers):
+    pass
