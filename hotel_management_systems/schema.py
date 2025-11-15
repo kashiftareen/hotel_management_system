@@ -15,8 +15,10 @@ class Create_User(BaseModel):
     password:str
     phone:str
 # Schema for updating customer details
-class update_cust(Create_User):
-    pass
+class update_cust(BaseModel):
+    username:str
+    email:str
+    phone:str
 
 # To create Room Schema
 class create_room(BaseModel):
