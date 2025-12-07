@@ -4,12 +4,6 @@ from sqlalchemy.orm import declarative_base,relationship
 from datetime import datetime
 from .schema import RoomStatus
 
-from fastapi import Depends
-from sqlalchemy import Column,String,Integer,Boolean,Enum as sqlenum,ForeignKey,Date,Float
-from sqlalchemy.orm import declarative_base,relationship
-from datetime import datetime
-from .schema import RoomStatus
-
 
 Base=declarative_base()
 
