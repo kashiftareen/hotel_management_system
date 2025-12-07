@@ -4,6 +4,7 @@ from sqlalchemy.orm import declarative_base,relationship
 from datetime import datetime
 from .schema import RoomStatus
 
+
 Base=declarative_base()
 
 
